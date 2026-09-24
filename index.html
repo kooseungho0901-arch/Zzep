@@ -5,7 +5,7 @@ HTML
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ZZEP | Official Store</title>
-  <!-- 결제 모듈 SDK -->
+  <!-- 포트원 결제 SDK -->
   <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -15,6 +15,10 @@ HTML
     header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; border-bottom: 1px solid #eee; position: sticky; top: 0; background: #fff; z-index: 100; }
     .logo { font-size: 24px; font-weight: 800; letter-spacing: 2px; }
     nav a { margin: 0 15px; text-decoration: none; color: #333; font-size: 14px; font-weight: 500; }
+    .header-right { display: flex; align-items: center; gap: 15px; }
+    
+    /* Language Toggle Switch */
+    .lang-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 13px; font-weight: bold; }
     .cart-btn { font-size: 14px; cursor: pointer; font-weight: 600; padding: 8px 16px; border: 1px solid #111; border-radius: 20px; }
 
     /* Product Grid */
@@ -46,77 +50,153 @@ HTML
   <header>
     <div class="logo">ZZEP</div>
     <nav>
-      <a href="#clothing">CLOTHING</a>
-      <a href="#wallets">WALLETS & ACC</a>
+      <a href="#clothing" id="nav-clothing">CLOTHING</a>
+      <a href="#wallets" id="nav-wallets">WALLETS & ACC</a>
     </nav>
-    <div class="cart-btn" onclick="toggleCart()">CART (<span id="cart-count">0</span>)</div>
+    <div class="header-right">
+      <!-- 언어 전환 버튼 -->
+      <button class="lang-btn" onclick="toggleLanguage()" id="lang-btn">🌐 EN</button>
+      <div class="cart-btn" onclick="toggleCart()"><span id="lbl-cart">CART</span> (<span id="cart-count">0</span>)</div>
+    </div>
   </header>
 
   <div class="container">
-    <h2 class="section-title">NEW ARRIVALS</h2>
-    <div class="products">
-      <!-- 상품 1 -->
-      <div class="product-card">
-        <div class="product-img" style="background-color: #e2e8f0;"></div>
-        <div class="product-name">오버핏 헤비 코튼 후디</div>
-        <div class="product-price">₩ 89,000</div>
-        <button class="add-to-cart" onclick="addToCart('오버핏 헤비 코튼 후디', 89000)">장바구니 담기</button>
-      </div>
-      <!-- 상품 2 -->
-      <div class="product-card">
-        <div class="product-img" style="background-color: #cbd5e1;"></div>
-        <div class="product-name">미니멀 가죽 카드 지갑</div>
-        <div class="product-price">₩ 59,000</div>
-        <button class="add-to-cart" onclick="addToCart('미니멀 가죽 카드 지갑', 59000)">장바구니 담기</button>
-      </div>
-      <!-- 상품 3 -->
-      <div class="product-card">
-        <div class="product-img" style="background-color: #94a3b8;"></div>
-        <div class="product-name">클래식 폴딩 반지갑</div>
-        <div class="product-price">₩ 79,000</div>
-        <button class="add-to-cart" onclick="addToCart('클래식 폴딩 반지갑', 79000)">장바구니 담기</button>
-      </div>
+    <h2 class="section-title" id="section-title">NEW ARRIVALS</h2>
+    <div class="products" id="product-list">
+      <!-- JavaScript에서 번역된 상품 데이터가 로드됩니다 -->
     </div>
   </div>
 
-  <!-- 장바구니 오버레이 및 드로어 -->
+  <!-- 장바구니 슬라이드 드로어 -->
   <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
   <div class="cart-drawer" id="cart-drawer">
     <div>
       <div class="cart-header">
-        <h3>장바구니</h3>
+        <h3 id="cart-title">장바구니</h3>
         <span class="close-btn" onclick="toggleCart()">&times;</span>
       </div>
       <div class="cart-items" id="cart-items">
-        <p style="color: #888; text-align: center; margin-top: 40px;">장바구니가 비어 있습니다.</p>
+        <!-- 장바구니 목록 -->
       </div>
     </div>
     <div class="cart-footer">
       <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px;">
-        <span>총 결제금액</span>
+        <span id="lbl-total">총 결제금액</span>
         <span id="total-price">₩ 0</span>
       </div>
-      <button class="checkout-btn" onclick="requestPay()">결제하기</button>
+      <button class="checkout-btn" id="btn-checkout" onclick="requestPay()">결제하기</button>
     </div>
   </div>
 
   <script>
-    // 결제 모듈 초기화
+    // ⚠️ 포트원 콘솔에서 발급받은 본인의 가맹점 식별코드를 넣으세요 (예: imp12345678)
     IMP.init("imp00000000");
 
+    let currentLang = 'ko'; // 기본 언어: 한국어
     let cart = [];
+
+    // 상품 데이터 (한국어 / 영어)
+    const productsData = [
+      {
+        id: 1,
+        name: { ko: "오버핏 헤비 코튼 후디", en: "Overfit Heavy Cotton Hoodie" },
+        price: 89000,
+        bgColor: "#e2e8f0"
+      },
+      {
+        id: 2,
+        name: { ko: "미니멀 가죽 카드 지갑", en: "Minimal Leather Card Wallet" },
+        price: 59000,
+        bgColor: "#cbd5e1"
+      },
+      {
+        id: 3,
+        name: { ko: "클래식 폴딩 반지갑", en: "Classic Folding Wallet" },
+        price: 79000,
+        bgColor: "#94a3b8"
+      }
+    ];
+
+    // 번역 문구 정의
+    const i18n = {
+      ko: {
+        navClothing: "의류",
+        navWallets: "지갑 & 잡화",
+        sectionTitle: "신상품 컬렉션",
+        btnCart: "장바구니 담기",
+        cartHeader: "장바구니",
+        cartEmpty: "장바구니가 비어 있습니다.",
+        cartDelete: "삭제",
+        cartTotal: "총 결제금액",
+        checkout: "결제하기",
+        cartLabel: "장바구니",
+        langToggle: "🌐 EN"
+      },
+      en: {
+        navClothing: "CLOTHING",
+        navWallets: "WALLETS & ACC",
+        sectionTitle: "NEW ARRIVALS",
+        btnCart: "Add to Cart",
+        cartHeader: "Shopping Cart",
+        cartEmpty: "Your cart is empty.",
+        cartDelete: "Delete",
+        cartTotal: "Total",
+        checkout: "Checkout",
+        cartLabel: "CART",
+        langToggle: "🌐 한국어"
+      }
+    };
+
+    // 언어 변경 함수
+    function toggleLanguage() {
+      currentLang = (currentLang === 'ko') ? 'en' : 'ko';
+      renderPage();
+      updateCartUI();
+    }
+
+    // 페이지 전체 텍스트 및 상품 렌더링
+    function renderPage() {
+      const t = i18n[currentLang];
+      
+      document.getElementById('nav-clothing').innerText = t.navClothing;
+      document.getElementById('nav-wallets').innerText = t.navWallets;
+      document.getElementById('section-title').innerText = t.sectionTitle;
+      document.getElementById('lbl-cart').innerText = t.cartLabel;
+      document.getElementById('cart-title').innerText = t.cartHeader;
+      document.getElementById('lbl-total').innerText = t.cartTotal;
+      document.getElementById('btn-checkout').innerText = t.checkout;
+      document.getElementById('lang-btn').innerText = t.langToggle;
+
+      // 상품 목록 다시 그리기
+      const productListContainer = document.getElementById('product-list');
+      productListContainer.innerHTML = '';
+
+      productsData.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div class="product-img" style="background-color: ${p.bgColor};"></div>
+          <div class="product-name">${p.name[currentLang]}</div>
+          <div class="product-price">₩ ${p.price.toLocaleString()}</div>
+          <button class="add-to-cart" onclick="addToCart(${p.id})">${t.btnCart}</button>
+        `;
+        productListContainer.appendChild(card);
+      });
+    }
 
     function toggleCart() {
       document.getElementById('cart-overlay').classList.toggle('active');
       document.getElementById('cart-drawer').classList.toggle('active');
     }
 
-    function addToCart(name, price) {
-      const existingIndex = cart.findIndex(item => item.name === name);
+    function addToCart(productId) {
+      const product = productsData.find(p => p.id === productId);
+      const existingIndex = cart.findIndex(item => item.id === productId);
+
       if (existingIndex > -1) {
         cart[existingIndex].quantity += 1;
       } else {
-        cart.push({ name, price, quantity: 1 });
+        cart.push({ ...product, quantity: 1 });
       }
       updateCartUI();
       toggleCart();
@@ -128,6 +208,7 @@ HTML
     }
 
     function updateCartUI() {
+      const t = i18n[currentLang];
       const cartItemsContainer = document.getElementById('cart-items');
       const cartCount = document.getElementById('cart-count');
       const totalPriceEl = document.getElementById('total-price');
@@ -136,7 +217,7 @@ HTML
       let totalPrice = 0;
 
       if (cart.length === 0) {
-        cartItemsContainer.innerHTML = '<p style="color: #888; text-align: center; margin-top: 40px;">장바구니가 비어 있습니다.</p>';
+        cartItemsContainer.innerHTML = `<p style="color: #888; text-align: center; margin-top: 40px;">${t.cartEmpty}</p>`;
       } else {
         cartItemsContainer.innerHTML = '';
         cart.forEach((item, index) => {
@@ -147,10 +228,10 @@ HTML
           itemEl.className = 'cart-item';
           itemEl.innerHTML = `
             <div>
-              <div style="font-weight: 600;">${item.name}</div>
+              <div style="font-weight: 600;">${item.name[currentLang]}</div>
               <div style="font-size: 13px; color: #666;">₩ ${item.price.toLocaleString()} x ${item.quantity}</div>
             </div>
-            <button onclick="removeFromCart(${index})" style="background: none; border: none; color: #ff4d4f; cursor: pointer;">삭제</button>
+            <button onclick="removeFromCart(${index})" style="background: none; border: none; color: #ff4d4f; cursor: pointer;">${t.cartDelete}</button>
           `;
           cartItemsContainer.appendChild(itemEl);
         });
@@ -161,13 +242,15 @@ HTML
     }
 
     function requestPay() {
+      const t = i18n[currentLang];
       if (cart.length === 0) {
-        alert("장바구니에 상품을 먼저 담아주세요.");
+        alert(t.cartEmpty);
         return;
       }
 
       const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      const orderTitle = cart.length === 1 ? cart[0].name : `${cart[0].name} 외 ${cart.length - 1}건`;
+      const firstItemName = cart[0].name[currentLang];
+      const orderTitle = cart.length === 1 ? firstItemName : `${firstItemName} + ${cart.length - 1}`;
 
       IMP.request_pay({
         pg: "kcp",
@@ -176,19 +259,22 @@ HTML
         name: orderTitle,
         amount: totalPrice,
         buyer_email: "test@zzep.com",
-        buyer_name: "구매자",
+        buyer_name: "Customer",
         buyer_tel: "010-0000-0000"
       }, function (rsp) {
         if (rsp.success) {
-          alert("결제가 완료되었습니다! 주문번호: " + rsp.merchant_uid);
+          alert("결제 성공! / Payment Successful! Order ID: " + rsp.merchant_uid);
           cart = [];
           updateCartUI();
           toggleCart();
         } else {
-          alert("결제 테스트 창 호출: " + rsp.error_msg);
+          alert("결제 알림: " + rsp.error_msg);
         }
       });
     }
+
+    // 처음 로딩 시 페이지 생성
+    renderPage();
   </script>
 </body>
 </html>
