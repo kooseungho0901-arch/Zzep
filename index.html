@@ -12,8 +12,12 @@ HTML
     body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #111; background: #fff; }
     
     /* Header */
-    header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; border-bottom: 1px solid #eee; position: sticky; top: 0; background: #fff; z-index: 100; }
-    .logo { font-size: 24px; font-weight: 800; letter-spacing: 2px; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; border-bottom: 1px solid #eee; position: sticky; top: 0; background: #fff; z-index: 100; }
+    
+    /* Image Logo Styling */
+    .logo { display: flex; align-items: center; }
+    .logo img { height: 36px; width: auto; object-fit: contain; }
+
     nav a { margin: 0 15px; text-decoration: none; color: #333; font-size: 14px; font-weight: 500; }
     .header-right { display: flex; align-items: center; gap: 15px; }
     
@@ -48,7 +52,11 @@ HTML
 <body>
 
   <header>
-    <div class="logo">ZZEP</div>
+    <!-- 내 로고 이미지 적용 부분 -->
+    <a href="#" class="logo">
+      <img src="https://chatgpt.com/backend-api/estuary/content?id=file_000000001e248208bb7a08b5d930feda&ts=497295&p=fs&cid=1&sig=31e7ae6d26ec5a3fc8989fb3ac4e7b7577f8841d8780fec179971aa0111c5311&v=0" alt="ZZEP Logo">
+    </a>
+    
     <nav>
       <a href="#clothing" id="nav-clothing">CLOTHING</a>
       <a href="#wallets" id="nav-wallets">WALLETS & ACC</a>
@@ -95,7 +103,7 @@ HTML
     let currentLang = 'ko'; // 기본 언어: 한국어
     let cart = [];
 
-    // 상품 데이터 (한국어 / 영어)
+    // 상품 데이터
     const productsData = [
       {
         id: 1,
@@ -147,14 +155,12 @@ HTML
       }
     };
 
-    // 언어 변경 함수
     function toggleLanguage() {
       currentLang = (currentLang === 'ko') ? 'en' : 'ko';
       renderPage();
       updateCartUI();
     }
 
-    // 페이지 전체 텍스트 및 상품 렌더링
     function renderPage() {
       const t = i18n[currentLang];
       
@@ -167,7 +173,6 @@ HTML
       document.getElementById('btn-checkout').innerText = t.checkout;
       document.getElementById('lang-btn').innerText = t.langToggle;
 
-      // 상품 목록 다시 그리기
       const productListContainer = document.getElementById('product-list');
       productListContainer.innerHTML = '';
 
@@ -273,7 +278,6 @@ HTML
       });
     }
 
-    // 처음 로딩 시 페이지 생성
     renderPage();
   </script>
 </body>
