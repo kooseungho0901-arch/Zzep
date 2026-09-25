@@ -10,7 +10,7 @@ a{text-decoration:none;color:inherit}button,input,select{font:inherit}
 .top{background:#111;color:#fff;text-align:center;padding:9px;font-size:12px}
 .header{border-bottom:1px solid #eee;padding:18px 5vw;position:sticky;top:0;background:#fff;z-index:10}
 .head{display:flex;align-items:center;gap:30px}.logo{font-weight:900;font-size:30px;letter-spacing:-2px}.search{flex:1;max-width:560px;margin:auto;display:flex;border-bottom:2px solid #111}.search input{border:0;outline:0;width:100%;padding:10px}.search button{border:0;background:none;cursor:pointer}
-.links{display:flex;gap:15px;font-size:13px;white-space:nowrap}
+.links{display:flex;gap:15px;font-size:13px;white-space:nowrap;align-items:center}.mobile-icons{display:none;gap:8px}.iconbtn{border:0;background:none;font-size:19px;padding:6px;cursor:pointer}.mobile-menu{display:none}
 .nav{display:flex;gap:28px;margin-top:18px;font-size:13px;font-weight:700;overflow:auto}.nav button{border:0;background:none;cursor:pointer;padding:0}
 .hero{margin:0 5vw;height:430px;background:#e9e9e9;display:flex;align-items:flex-end;padding:45px;margin-top:24px}
 .hero h1{font-size:64px;line-height:.9;margin:0 0 12px;letter-spacing:-5px}.hero p{margin:0 0 24px}.btn{border:0;background:#111;color:#fff;padding:14px 24px;cursor:pointer}
@@ -33,7 +33,7 @@ a{text-decoration:none;color:inherit}button,input,select{font:inherit}
 <header class="header"><div class="head">
 <a class="logo" href="#" onclick="home()">ZZEP</a>
 <div class="search"><input id="search" placeholder="상품을 검색해보세요"><button onclick="doSearch()">⌕</button></div>
-<div class="links"><a href="#" onclick="openAuth()">LOGIN</a><a href="#" onclick="showFavorites()">♡</a><a href="#" onclick="openCart()">BAG(<span id="bagCount">0</span>)</a></div>
+<div class="links"><a href="#" onclick="openAuth()">LOGIN</a><a href="#" onclick="showFavorites()">♡</a><a href="#" onclick="openCart()">BAG(<span id="bagCount">0</span>)</a></div><div class="mobile-icons"><button class="iconbtn" onclick="showFavorites()">♡</button><button class="iconbtn" onclick="openCart()">🛍️<span id="mobileBagCount">0</span></button><button class="iconbtn" onclick="toggleMobileMenu()">☰</button></div>
 </div><nav class="nav">
 <button onclick="filterCat('NEW')">NEW</button><button onclick="filterCat('BEST')">BEST</button><button onclick="filterCat('CLOTHING')">CLOTHING</button><button onclick="filterCat('ACC')">ACC</button><button onclick="filterCat('SALE')">SALE</button><button onclick="openAdmin()">ZZEP ADMIN</button>
 </nav></header>
@@ -53,6 +53,28 @@ a{text-decoration:none;color:inherit}button,input,select{font:inherit}
 
 <div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div class="panel"><button class="close" onclick="closeModal()">×</button><div id="modalBody"></div></div></div>
 <div id="shade" class="shade" onclick="closeCart()"></div><aside id="cart" class="drawer"><button class="close" onclick="closeCart()">×</button><h2>SHOPPING BAG</h2><div id="cartItems"></div><hr><h3 id="total">₩0</h3><button class="btn" style="width:100%" onclick="checkout()">CHECKOUT →</button></aside>
+
+
+<div id="mobileMenu" class="mobile-menu" style="position:fixed;inset:0;background:#fff;z-index:70;padding:24px;overflow:auto">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding-bottom:18px">
+    <b style="font-size:25px;letter-spacing:-2px">ZZEP</b>
+    <button class="iconbtn" onclick="toggleMobileMenu()">×</button>
+  </div>
+  <div style="display:grid;gap:0;margin-top:15px">
+    <button class="mobileNav" onclick="toggleMobileMenu();openAuth()">LOGIN / SIGN UP</button>
+    <button class="mobileNav" onclick="toggleMobileMenu();showFavorites()">♡ WISHLIST</button>
+    <button class="mobileNav" onclick="toggleMobileMenu();openCart()">🛍️ SHOPPING BAG</button>
+    <button class="mobileNav" onclick="toggleMobileMenu();filterCat('NEW')">NEW</button>
+    <button class="mobileNav" onclick="toggleMobileMenu();filterCat('BEST')">BEST</button>
+    <button class="mobileNav" onclick="toggleMobileMenu();filterCat('CLOTHING')">CLOTHING</button>
+    <button class="mobileNav" onclick="toggleMobileMenu();filterCat('ACC')">ACCESSORIES</button>
+    <button class="mobileNav" onclick="toggleMobileMenu();filterCat('SALE')">SALE</button>
+  </div>
+</div>
+<style>
+.mobileNav{border:0;border-bottom:1px solid #eee;background:#fff;text-align:left;padding:20px 4px;font-weight:700;font-size:16px;cursor:pointer}
+@media(min-width:701px){#mobileMenu{display:none!important}}
+</style>
 
 <script>
 const products=[
@@ -76,7 +98,8 @@ function detail(id){let p=products.find(x=>x.id===id);document.getElementById('m
 function closeModal(){document.getElementById('modal').classList.remove('on')}
 function addCart(id){cart.push(id);save();updateBag()}
 function save(){localStorage.setItem('zzep_cart',JSON.stringify(cart));localStorage.setItem('zzep_fav',JSON.stringify(fav))}
-function updateBag(){document.getElementById('bagCount').textContent=cart.length}
+function updateBag(){document.getElementById('bagCount').textContent=cart.length;document.getElementById('mobileBagCount').textContent=cart.length?cart.length:''}
+function toggleMobileMenu(){let m=document.getElementById('mobileMenu');m.style.display=(m.style.display==='block'?'none':'block')}
 function openCart(){renderCart();document.getElementById('shade').classList.add('on');document.getElementById('cart').classList.add('on')}
 function closeCart(){document.getElementById('shade').classList.remove('on');document.getElementById('cart').classList.remove('on')}
 function renderCart(){let counts={};cart.forEach(id=>counts[id]=(counts[id]||0)+1);let html='',total=0;Object.entries(counts).forEach(([id,q])=>{let p=products.find(x=>x.id==id);total+=p.price*q;html+=`<div class="item"><div class="thumb">${p.color}</div><div><b>${p.name}</b><p>${money(p.price)}</p><div class="qty"><button onclick="changeQty(${id},-1)">−</button>${q}<button onclick="changeQty(${id},1)">+</button></div></div></div>`});document.getElementById('cartItems').innerHTML=html||'<p>장바구니가 비어 있습니다.</p>';document.getElementById('total').textContent=money(total)}
