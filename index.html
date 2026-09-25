@@ -27,6 +27,34 @@ a{text-decoration:none;color:inherit}button,input,select{font:inherit}
 .admin table{width:100%;border-collapse:collapse;font-size:13px}.admin th,.admin td{padding:10px;border-bottom:1px solid #eee;text-align:left}
 @media(max-width:700px){.head{gap:12px}.links{display:none}.hero{height:330px;padding:25px}.hero h1{font-size:42px}.cats{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:repeat(2,1fr);gap:20px 9px}.wrap{padding:45px 4vw}.header{padding:15px 4vw}.detail{grid-template-columns:1fr}.nav{gap:18px}}
 </style>
+
+<style>
+/* ZZEP 4-brand operation layer */
+.zep-admin-strip{display:none;position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:9998}
+.zep-admin{display:none;position:fixed;right:0;top:0;width:min(420px,92vw);height:100%;background:#fff;z-index:9999;padding:24px;overflow:auto;box-shadow:-20px 0 60px rgba(0,0,0,.16)}
+.zep-admin.open,.zep-admin-strip.open{display:block}
+.zep-admin h2{margin:0 0 6px;font-size:22px}
+.zep-admin .muted{color:#777;font-size:13px}
+.zep-admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.zep-admin-card{border:1px solid #ddd;padding:14px;border-radius:8px}
+.zep-admin-card b{display:block;font-size:18px;margin-top:5px}
+.zep-admin button{width:100%;padding:12px;border:1px solid #111;background:#111;color:#fff;border-radius:6px;margin-top:10px;cursor:pointer}
+.zep-admin button.alt{background:#fff;color:#111}
+.zep-admin-close{float:right;background:none!important;color:#111!important;border:0!important;width:auto!important;font-size:22px}
+.zep-searchbox{display:flex;gap:8px;max-width:760px;margin:22px auto}
+.zep-searchbox input{flex:1;padding:14px 16px;border:1px solid #ccc;font-size:15px}
+.zep-searchbox button{padding:0 20px;background:#111;color:#fff;border:0;cursor:pointer}
+.zep-edit{padding:72px 0;border-top:1px solid #eee}
+.zep-edit-inner{display:grid;grid-template-columns:1.25fr 1fr;gap:42px;align-items:center}
+.zep-edit-visual{min-height:360px;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-size:clamp(40px,6vw,90px);font-weight:800;letter-spacing:-.06em}
+.zep-edit-copy h2{font-size:clamp(30px,4vw,56px);margin:0 0 15px}
+.zep-edit-copy p{line-height:1.7;color:#555}
+.zep-edit-copy button{padding:13px 24px;background:#111;color:#fff;border:0;margin-top:12px;cursor:pointer}
+.zep-status{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:#555;margin-left:10px}
+.zep-dot{width:7px;height:7px;border-radius:50%;background:#111;display:inline-block}
+.zep-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:12px 18px;z-index:10000;border-radius:4px;display:none}
+@media(max-width:700px){.zep-edit-inner{grid-template-columns:1fr}.zep-edit-visual{min-height:240px}}
+</style>
 </head>
 <body>
 <div class="top">ZZEP — EVERYDAY STREET ESSENTIALS</div>
@@ -49,6 +77,54 @@ a{text-decoration:none;color:inherit}button,input,select{font:inherit}
 <section class="wrap"><div class="title"><h2>NEW ARRIVALS</h2><span class="muted">방금 들어온 상품</span></div><div id="new" class="grid"></div></section>
 
 <section class="story"><h2>ZZEP EDIT</h2><p>유행보다 오래 입는 것. 매일 손이 가는 것.<br>ZZEP이 직접 고른 스트리트 에센셜.</p></section>
+
+<section class="container" style="padding-top:34px">
+  <div class="zep-searchbox">
+    <input id="zep-search" type="search" placeholder="Search ZZEP">
+    <button onclick="zepSearch()">SEARCH</button>
+  </div>
+</section>
+
+<section class="zep-edit">
+  <div class="container zep-edit-inner">
+    <div class="zep-edit-visual">ZZEP<br>EDIT</div>
+    <div class="zep-edit-copy">
+      <p>ZZEP EDIT · CURATION</p>
+      <h2>이번 주,<br>ZZEP가 고른 것.</h2>
+      <p>상품을 많이 보여주는 대신, 지금 ZZEP가 보여주고 싶은 것만 고릅니다. 상품이 적어도 브랜드의 취향은 분명하게 보이도록 설계했습니다.</p>
+      <button onclick="document.querySelector('.products')?.scrollIntoView({behavior:'smooth'})">VIEW PICKS</button>
+    </div>
+  </div>
+</section>
+
+<div class="zep-admin-strip" id="zep-admin-strip" onclick="zepCloseAdmin()"></div>
+<aside class="zep-admin" id="zep-admin">
+  <button class="zep-admin-close" onclick="zepCloseAdmin()">×</button>
+  <h2>ZZEP ADMIN</h2>
+  <div class="muted">운영 구조 미리보기 · 실제 DB 연결 전 단계</div>
+  <div class="zep-admin-grid">
+    <div class="zep-admin-card">PRODUCTS<b>3</b></div>
+    <div class="zep-admin-card">ORDERS<b>0</b></div>
+    <div class="zep-admin-card">CUSTOMERS<b>0</b></div>
+    <div class="zep-admin-card">WISHLIST<b>0</b></div>
+  </div>
+  <div class="zep-admin-card" style="margin-top:10px">
+    <strong>HOME CONTROL</strong>
+    <p class="muted">HERO / NEW / BEST / EDIT / STORY 노출을 운영자가 조절하는 구조</p>
+    <button onclick="zepToast('HOME 영역은 현재 모두 ON 상태입니다.')">HOME SETTINGS</button>
+  </div>
+  <div class="zep-admin-card" style="margin-top:10px">
+    <strong>PRODUCT OPERATIONS</strong>
+    <button onclick="zepToast('상품 등록 화면을 다음 단계에서 연결합니다.')">+ ADD PRODUCT</button>
+    <button class="alt" onclick="zepToast('재고/노출/카테고리 관리 구조')">MANAGE PRODUCTS</button>
+  </div>
+  <div class="zep-admin-card" style="margin-top:10px">
+    <strong>ORDER OPERATIONS</strong>
+    <button onclick="zepToast('주문 관리 화면을 다음 단계에서 연결합니다.')">MANAGE ORDERS</button>
+  </div>
+</aside>
+<div class="zep-toast" id="zep-toast"></div>
+
 <footer class="footer">ZZEP.store<br>Customer Center · 10:00–18:00<br><br>※ 현재 버전은 기능 검증용 데모입니다. 결제는 실제 청구되지 않습니다.</footer>
 
 <div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div class="panel"><button class="close" onclick="closeModal()">×</button><div id="modalBody"></div></div></div>
@@ -113,5 +189,23 @@ function login(){localStorage.setItem('zzep_user',document.getElementById('email
 function checkout(){if(!cart.length)return alert('장바구니가 비어 있습니다.');let orders=JSON.parse(localStorage.getItem('zzep_orders')||'[]');orders.push({id:'ZZ'+Date.now(),items:[...cart],created:new Date().toISOString(),status:'PAYMENT_TEST'});localStorage.setItem('zzep_orders',JSON.stringify(orders));cart=[];save();updateBag();closeCart();alert('주문 테스트가 생성되었습니다. 실제 결제는 연결하지 않은 데모입니다.')}
 function openAdmin(){let orders=JSON.parse(localStorage.getItem('zzep_orders')||'[]');document.getElementById('modalBody').innerHTML=`<div class="admin"><h2>ZZEP ADMIN</h2><p class="muted">현재 브라우저 데모용 관리자 화면</p><table><tr><th>주문번호</th><th>상품수</th><th>상태</th></tr>${orders.map(o=>`<tr><td>${o.id}</td><td>${o.items.length}</td><td>${o.status}</td></tr>`).join('')}</table></div>`;document.getElementById('modal').classList.add('on')}
 function home(){location.reload()}
+</script>
+
+<script>
+function zepSearch(){
+  const q=(document.getElementById('zep-search').value||'').trim();
+  if(!q){zepToast('검색어를 입력하세요.');return;}
+  const cards=[...document.querySelectorAll('.product-card')];
+  const hit=cards.filter(c=>c.innerText.toLowerCase().includes(q.toLowerCase()));
+  cards.forEach(c=>c.style.display=hit.includes(c)?'':'none');
+  zepToast(hit.length ? q+' · '+hit.length+'개 상품' : q+' · 검색 결과 없음');
+}
+function zepToast(msg){
+  const t=document.getElementById('zep-toast'); t.textContent=msg; t.style.display='block';
+  clearTimeout(window.__zt); window.__zt=setTimeout(()=>t.style.display='none',1800);
+}
+function zepOpenAdmin(){document.getElementById('zep-admin').classList.add('open');document.getElementById('zep-admin-strip').classList.add('open')}
+function zepCloseAdmin(){document.getElementById('zep-admin').classList.remove('open');document.getElementById('zep-admin-strip').classList.remove('open')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')zepCloseAdmin()});
 </script>
 </body></html>
