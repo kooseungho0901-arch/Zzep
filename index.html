@@ -1,284 +1,94 @@
-HTML
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZZEP | Official Store</title>
-  <!-- 포트원 결제 SDK -->
-  <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #111; background: #fff; }
-    
-    /* Header */
-    header { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; border-bottom: 1px solid #eee; position: sticky; top: 0; background: #fff; z-index: 100; }
-    
-    /* Image Logo Styling */
-    .logo { display: flex; align-items: center; }
-    .logo img { height: 36px; width: auto; object-fit: contain; }
-
-    nav a { margin: 0 15px; text-decoration: none; color: #333; font-size: 14px; font-weight: 500; }
-    .header-right { display: flex; align-items: center; gap: 15px; }
-    
-    /* Language Toggle Switch */
-    .lang-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 13px; font-weight: bold; }
-    .cart-btn { font-size: 14px; cursor: pointer; font-weight: 600; padding: 8px 16px; border: 1px solid #111; border-radius: 20px; }
-
-    /* Product Grid */
-    .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-    .section-title { text-align: center; margin-bottom: 40px; font-size: 22px; letter-spacing: 1px; }
-    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
-    .product-card { border: 1px solid #eee; padding: 20px; text-align: center; border-radius: 8px; }
-    .product-img { width: 100%; height: 280px; background: #f4f4f4; border-radius: 4px; margin-bottom: 15px; object-fit: cover; }
-    .product-name { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-    .product-price { font-size: 15px; color: #555; margin-bottom: 15px; }
-    .add-to-cart { width: 100%; padding: 10px; background: #111; color: #fff; border: none; cursor: pointer; border-radius: 4px; font-size: 14px; }
-    .add-to-cart:hover { background: #333; }
-
-    /* Cart Slide Drawer */
-    .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transition: 0.3s; z-index: 200; }
-    .cart-overlay.active { opacity: 1; visibility: visible; }
-    .cart-drawer { position: fixed; top: 0; right: -400px; width: 380px; height: 100%; background: #fff; z-index: 201; transition: 0.3s ease-in-out; padding: 30px; display: flex; flex-direction: column; justify-content: space-between; }
-    .cart-drawer.active { right: 0; }
-    .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-    .cart-items { flex: 1; overflow-y: auto; margin: 20px 0; }
-    .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f9f9f9; }
-    .cart-footer { border-top: 1px solid #eee; padding-top: 20px; }
-    .checkout-btn { width: 100%; padding: 14px; background: #111; color: #fff; border: none; font-size: 16px; cursor: pointer; border-radius: 4px; margin-top: 15px; }
-    .close-btn { cursor: pointer; font-size: 20px; font-weight: bold; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ZZEP | Store</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans KR",sans-serif;color:#111;background:#fff}
+a{text-decoration:none;color:inherit}button,input,select{font:inherit}
+.top{background:#111;color:#fff;text-align:center;padding:9px;font-size:12px}
+.header{border-bottom:1px solid #eee;padding:18px 5vw;position:sticky;top:0;background:#fff;z-index:10}
+.head{display:flex;align-items:center;gap:30px}.logo{font-weight:900;font-size:30px;letter-spacing:-2px}.search{flex:1;max-width:560px;margin:auto;display:flex;border-bottom:2px solid #111}.search input{border:0;outline:0;width:100%;padding:10px}.search button{border:0;background:none;cursor:pointer}
+.links{display:flex;gap:15px;font-size:13px;white-space:nowrap}
+.nav{display:flex;gap:28px;margin-top:18px;font-size:13px;font-weight:700;overflow:auto}.nav button{border:0;background:none;cursor:pointer;padding:0}
+.hero{margin:0 5vw;height:430px;background:#e9e9e9;display:flex;align-items:flex-end;padding:45px;margin-top:24px}
+.hero h1{font-size:64px;line-height:.9;margin:0 0 12px;letter-spacing:-5px}.hero p{margin:0 0 24px}.btn{border:0;background:#111;color:#fff;padding:14px 24px;cursor:pointer}
+.wrap{padding:70px 5vw}.title{display:flex;justify-content:space-between;align-items:end;margin-bottom:24px}.title h2{margin:0;font-size:25px}.muted{color:#777;font-size:13px}
+.cats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.cat{background:#f4f4f4;padding:35px 12px;text-align:center;font-weight:700;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px 14px}.card{cursor:pointer}.pic{aspect-ratio:3/4;background:#eee;display:flex;align-items:center;justify-content:center;font-size:12px;color:#999;position:relative}.heart{position:absolute;right:10px;top:10px;background:#fff;border:0;border-radius:50%;width:34px;height:34px;cursor:pointer}.info{padding:12px 2px}.brand{font-size:12px;font-weight:700}.name{margin-top:5px;font-size:14px}.price{margin-top:8px;font-weight:700}.badge{font-size:10px;background:#111;color:#fff;padding:4px 6px;margin-right:4px}
+.story{background:#111;color:#fff;padding:80px 8vw;margin-top:30px}.story h2{font-size:45px;margin:0 0 15px}
+.footer{padding:60px 5vw;border-top:1px solid #eee;font-size:12px;color:#666;line-height:1.8}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:50}.modal.on{display:flex}.panel{background:#fff;width:min(900px,92vw);max-height:90vh;overflow:auto;padding:28px;position:relative}.close{position:absolute;right:18px;top:14px;border:0;background:none;font-size:25px;cursor:pointer}
+.detail{display:grid;grid-template-columns:1fr 1fr;gap:30px}.detailpic{background:#eee;aspect-ratio:1}.detail h2{margin-top:0}.opts{display:flex;gap:8px;flex-wrap:wrap}.opts button{background:#fff;border:1px solid #bbb;padding:10px 14px;cursor:pointer}.opts button.sel{background:#111;color:#fff}.row{display:flex;gap:10px;margin-top:15px}.row>*{flex:1}
+.drawer{position:fixed;right:0;top:0;height:100%;width:min(450px,100%);background:#fff;z-index:60;transform:translateX(100%);transition:.25s;padding:28px;overflow:auto}.drawer.on{transform:translateX(0)}.shade{position:fixed;inset:0;background:#0006;display:none;z-index:55}.shade.on{display:block}
+.item{display:flex;gap:12px;border-bottom:1px solid #eee;padding:15px 0}.thumb{width:80px;height:100px;background:#eee}.qty{display:flex;gap:8px;align-items:center}.qty button{border:1px solid #ddd;background:#fff;width:28px;height:28px}
+.form input{width:100%;padding:13px;margin:7px 0;border:1px solid #ddd}.form button{width:100%;margin-top:10px}
+.admin table{width:100%;border-collapse:collapse;font-size:13px}.admin th,.admin td{padding:10px;border-bottom:1px solid #eee;text-align:left}
+@media(max-width:700px){.head{gap:12px}.links{display:none}.hero{height:330px;padding:25px}.hero h1{font-size:42px}.cats{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:repeat(2,1fr);gap:20px 9px}.wrap{padding:45px 4vw}.header{padding:15px 4vw}.detail{grid-template-columns:1fr}.nav{gap:18px}}
+</style>
 </head>
 <body>
+<div class="top">ZZEP — EVERYDAY STREET ESSENTIALS</div>
+<header class="header"><div class="head">
+<a class="logo" href="#" onclick="home()">ZZEP</a>
+<div class="search"><input id="search" placeholder="상품을 검색해보세요"><button onclick="doSearch()">⌕</button></div>
+<div class="links"><a href="#" onclick="openAuth()">LOGIN</a><a href="#" onclick="showFavorites()">♡</a><a href="#" onclick="openCart()">BAG(<span id="bagCount">0</span>)</a></div>
+</div><nav class="nav">
+<button onclick="filterCat('NEW')">NEW</button><button onclick="filterCat('BEST')">BEST</button><button onclick="filterCat('CLOTHING')">CLOTHING</button><button onclick="filterCat('ACC')">ACC</button><button onclick="filterCat('SALE')">SALE</button><button onclick="openAdmin()">ZZEP ADMIN</button>
+</nav></header>
 
-  <header>
-    <!-- 내 로고 이미지 적용 부분 -->
-    <a href="#" class="logo">
-      <img src="https://chatgpt.com/backend-api/estuary/content?id=file_000000001e248208bb7a08b5d930feda&ts=497295&p=fs&cid=1&sig=31e7ae6d26ec5a3fc8989fb3ac4e7b7577f8841d8780fec179971aa0111c5311&v=0" alt="ZZEP Logo">
-    </a>
-    
-    <nav>
-      <a href="#clothing" id="nav-clothing">CLOTHING</a>
-      <a href="#wallets" id="nav-wallets">WALLETS & ACC</a>
-    </nav>
-    <div class="header-right">
-      <!-- 언어 전환 버튼 -->
-      <button class="lang-btn" onclick="toggleLanguage()" id="lang-btn">🌐 EN</button>
-      <div class="cart-btn" onclick="toggleCart()"><span id="lbl-cart">CART</span> (<span id="cart-count">0</span>)</div>
-    </div>
-  </header>
+<section class="hero"><div><h1>ZZEP<br>SELECTS.</h1><p>매일 입고 싶은 것들만 고른다.</p><button class="btn" onclick="filterCat('NEW')">SHOP NOW →</button></div></section>
 
-  <div class="container">
-    <h2 class="section-title" id="section-title">NEW ARRIVALS</h2>
-    <div class="products" id="product-list">
-      <!-- JavaScript에서 번역된 상품 데이터가 로드됩니다 -->
-    </div>
-  </div>
+<section class="wrap"><div class="title"><h2>CATEGORIES</h2><span class="muted">EXPLORE ZZEP</span></div>
+<div class="cats">
+<div class="cat" onclick="filterCat('CLOTHING')">CLOTHING</div><div class="cat" onclick="filterCat('ACC')">ACCESSORIES</div><div class="cat" onclick="filterCat('TOPS')">TOPS</div><div class="cat" onclick="filterCat('BOTTOMS')">BOTTOMS</div><div class="cat" onclick="filterCat('BAG')">BAG</div><div class="cat" onclick="filterCat('SALE')">SALE</div>
+</div></section>
 
-  <!-- 장바구니 슬라이드 드로어 -->
-  <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
-  <div class="cart-drawer" id="cart-drawer">
-    <div>
-      <div class="cart-header">
-        <h3 id="cart-title">장바구니</h3>
-        <span class="close-btn" onclick="toggleCart()">&times;</span>
-      </div>
-      <div class="cart-items" id="cart-items">
-        <!-- 장바구니 목록 -->
-      </div>
-    </div>
-    <div class="cart-footer">
-      <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px;">
-        <span id="lbl-total">총 결제금액</span>
-        <span id="total-price">₩ 0</span>
-      </div>
-      <button class="checkout-btn" id="btn-checkout" onclick="requestPay()">결제하기</button>
-    </div>
-  </div>
+<section class="wrap"><div class="title"><h2>BEST ITEMS</h2><span class="muted">인기 상품</span></div><div id="best" class="grid"></div></section>
+<section class="wrap"><div class="title"><h2>NEW ARRIVALS</h2><span class="muted">방금 들어온 상품</span></div><div id="new" class="grid"></div></section>
 
-  <script>
-    // ⚠️ 포트원 콘솔에서 발급받은 본인의 가맹점 식별코드를 넣으세요 (예: imp12345678)
-    IMP.init("imp00000000");
+<section class="story"><h2>ZZEP EDIT</h2><p>유행보다 오래 입는 것. 매일 손이 가는 것.<br>ZZEP이 직접 고른 스트리트 에센셜.</p></section>
+<footer class="footer">ZZEP.store<br>Customer Center · 10:00–18:00<br><br>※ 현재 버전은 기능 검증용 데모입니다. 결제는 실제 청구되지 않습니다.</footer>
 
-    let currentLang = 'ko'; // 기본 언어: 한국어
-    let cart = [];
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div class="panel"><button class="close" onclick="closeModal()">×</button><div id="modalBody"></div></div></div>
+<div id="shade" class="shade" onclick="closeCart()"></div><aside id="cart" class="drawer"><button class="close" onclick="closeCart()">×</button><h2>SHOPPING BAG</h2><div id="cartItems"></div><hr><h3 id="total">₩0</h3><button class="btn" style="width:100%" onclick="checkout()">CHECKOUT →</button></aside>
 
-    // 상품 데이터
-    const productsData = [
-      {
-        id: 1,
-        name: { ko: "오버핏 헤비 코튼 후디", en: "Overfit Heavy Cotton Hoodie" },
-        price: 89000,
-        bgColor: "#e2e8f0"
-      },
-      {
-        id: 2,
-        name: { ko: "미니멀 가죽 카드 지갑", en: "Minimal Leather Card Wallet" },
-        price: 59000,
-        bgColor: "#cbd5e1"
-      },
-      {
-        id: 3,
-        name: { ko: "클래식 폴딩 반지갑", en: "Classic Folding Wallet" },
-        price: 79000,
-        bgColor: "#94a3b8"
-      }
-    ];
+<script>
+const products=[
+{id:1,name:'ZZEP Heavy Hoodie',brand:'ZZEP',price:89000,cat:['NEW','BEST','CLOTHING','TOPS'],color:'Black'},
+{id:2,name:'ZZEP Card Wallet',brand:'ZZEP',price:59000,cat:['BEST','ACC'],color:'Black'},
+{id:3,name:'ZZEP Folding Wallet',brand:'ZZEP',price:79000,cat:['BEST','ACC'],color:'Brown'},
+{id:4,name:'ZZEP Wide Denim',brand:'ZZEP',price:109000,cat:['NEW','CLOTHING','BOTTOMS'],color:'Denim'},
+{id:5,name:'ZZEP Logo Cap',brand:'ZZEP',price:49000,cat:['NEW','ACC'],color:'Black'},
+{id:6,name:'ZZEP Mini Bag',brand:'ZZEP',price:69000,cat:['NEW','ACC','BAG'],color:'Grey'},
+{id:7,name:'ZZEP Basic Tee',brand:'ZZEP',price:39000,cat:['BEST','CLOTHING','TOPS'],color:'White'},
+{id:8,name:'ZZEP Track Pants',brand:'ZZEP',price:79000,cat:['SALE','CLOTHING','BOTTOMS'],color:'Black'}
+];
+let cart=JSON.parse(localStorage.getItem('zzep_cart')||'[]'), fav=JSON.parse(localStorage.getItem('zzep_fav')||'[]');
 
-    // 번역 문구 정의
-    const i18n = {
-      ko: {
-        navClothing: "의류",
-        navWallets: "지갑 & 잡화",
-        sectionTitle: "신상품 컬렉션",
-        btnCart: "장바구니 담기",
-        cartHeader: "장바구니",
-        cartEmpty: "장바구니가 비어 있습니다.",
-        cartDelete: "삭제",
-        cartTotal: "총 결제금액",
-        checkout: "결제하기",
-        cartLabel: "장바구니",
-        langToggle: "🌐 EN"
-      },
-      en: {
-        navClothing: "CLOTHING",
-        navWallets: "WALLETS & ACC",
-        sectionTitle: "NEW ARRIVALS",
-        btnCart: "Add to Cart",
-        cartHeader: "Shopping Cart",
-        cartEmpty: "Your cart is empty.",
-        cartDelete: "Delete",
-        cartTotal: "Total",
-        checkout: "Checkout",
-        cartLabel: "CART",
-        langToggle: "🌐 한국어"
-      }
-    };
+function money(n){return '₩'+n.toLocaleString('ko-KR')}
+function card(p){return `<div class="card" onclick="detail(${p.id})"><div class="pic">${p.color}<button class="heart" onclick="event.stopPropagation();toggleFav(${p.id})">${fav.includes(p.id)?'♥':'♡'}</button></div><div class="info"><span class="badge">${p.cat.includes('NEW')?'NEW':''}</span><div class="brand">${p.brand}</div><div class="name">${p.name}</div><div class="price">${money(p.price)}</div></div></div>`}
+function render(list,id){document.getElementById(id).innerHTML=list.map(card).join('')}
+render(products.filter(p=>p.cat.includes('BEST')), 'best');render(products.filter(p=>p.cat.includes('NEW')),'new');updateBag();
 
-    function toggleLanguage() {
-      currentLang = (currentLang === 'ko') ? 'en' : 'ko';
-      renderPage();
-      updateCartUI();
-    }
-
-    function renderPage() {
-      const t = i18n[currentLang];
-      
-      document.getElementById('nav-clothing').innerText = t.navClothing;
-      document.getElementById('nav-wallets').innerText = t.navWallets;
-      document.getElementById('section-title').innerText = t.sectionTitle;
-      document.getElementById('lbl-cart').innerText = t.cartLabel;
-      document.getElementById('cart-title').innerText = t.cartHeader;
-      document.getElementById('lbl-total').innerText = t.cartTotal;
-      document.getElementById('btn-checkout').innerText = t.checkout;
-      document.getElementById('lang-btn').innerText = t.langToggle;
-
-      const productListContainer = document.getElementById('product-list');
-      productListContainer.innerHTML = '';
-
-      productsData.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <div class="product-img" style="background-color: ${p.bgColor};"></div>
-          <div class="product-name">${p.name[currentLang]}</div>
-          <div class="product-price">₩ ${p.price.toLocaleString()}</div>
-          <button class="add-to-cart" onclick="addToCart(${p.id})">${t.btnCart}</button>
-        `;
-        productListContainer.appendChild(card);
-      });
-    }
-
-    function toggleCart() {
-      document.getElementById('cart-overlay').classList.toggle('active');
-      document.getElementById('cart-drawer').classList.toggle('active');
-    }
-
-    function addToCart(productId) {
-      const product = productsData.find(p => p.id === productId);
-      const existingIndex = cart.findIndex(item => item.id === productId);
-
-      if (existingIndex > -1) {
-        cart[existingIndex].quantity += 1;
-      } else {
-        cart.push({ ...product, quantity: 1 });
-      }
-      updateCartUI();
-      toggleCart();
-    }
-
-    function removeFromCart(index) {
-      cart.splice(index, 1);
-      updateCartUI();
-    }
-
-    function updateCartUI() {
-      const t = i18n[currentLang];
-      const cartItemsContainer = document.getElementById('cart-items');
-      const cartCount = document.getElementById('cart-count');
-      const totalPriceEl = document.getElementById('total-price');
-
-      let totalCount = 0;
-      let totalPrice = 0;
-
-      if (cart.length === 0) {
-        cartItemsContainer.innerHTML = `<p style="color: #888; text-align: center; margin-top: 40px;">${t.cartEmpty}</p>`;
-      } else {
-        cartItemsContainer.innerHTML = '';
-        cart.forEach((item, index) => {
-          totalCount += item.quantity;
-          totalPrice += item.price * item.quantity;
-
-          const itemEl = document.createElement('div');
-          itemEl.className = 'cart-item';
-          itemEl.innerHTML = `
-            <div>
-              <div style="font-weight: 600;">${item.name[currentLang]}</div>
-              <div style="font-size: 13px; color: #666;">₩ ${item.price.toLocaleString()} x ${item.quantity}</div>
-            </div>
-            <button onclick="removeFromCart(${index})" style="background: none; border: none; color: #ff4d4f; cursor: pointer;">${t.cartDelete}</button>
-          `;
-          cartItemsContainer.appendChild(itemEl);
-        });
-      }
-
-      cartCount.innerText = totalCount;
-      totalPriceEl.innerText = `₩ ${totalPrice.toLocaleString()}`;
-    }
-
-    function requestPay() {
-      const t = i18n[currentLang];
-      if (cart.length === 0) {
-        alert(t.cartEmpty);
-        return;
-      }
-
-      const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      const firstItemName = cart[0].name[currentLang];
-      const orderTitle = cart.length === 1 ? firstItemName : `${firstItemName} + ${cart.length - 1}`;
-
-      IMP.request_pay({
-        pg: "kcp",
-        pay_method: "card",
-        merchant_uid: "zzep_" + new Date().getTime(),
-        name: orderTitle,
-        amount: totalPrice,
-        buyer_email: "test@zzep.com",
-        buyer_name: "Customer",
-        buyer_tel: "010-0000-0000"
-      }, function (rsp) {
-        if (rsp.success) {
-          alert("결제 성공! / Payment Successful! Order ID: " + rsp.merchant_uid);
-          cart = [];
-          updateCartUI();
-          toggleCart();
-        } else {
-          alert("결제 알림: " + rsp.error_msg);
-        }
-      });
-    }
-
-    renderPage();
-  </script>
-</body>
-</html>
+function detail(id){let p=products.find(x=>x.id===id);document.getElementById('modalBody').innerHTML=`<div class="detail"><div class="detailpic">${p.color}</div><div><div class="brand">${p.brand}</div><h2>${p.name}</h2><h3>${money(p.price)}</h3><p>ZZEP everyday essential. 편안한 실루엣과 데일리 착용을 위한 기본 아이템.</p><p>COLOR</p><div class="opts"><button class="sel">${p.color}</button></div><p>SIZE</p><div class="opts"><button class="sel">FREE</button><button>M</button><button>L</button></div><div class="row"><button class="btn" onclick="addCart(${p.id});closeModal();openCart()">ADD TO BAG</button><button onclick="toggleFav(${p.id})">♡ WISHLIST</button></div></div></div>`;document.getElementById('modal').classList.add('on')}
+function closeModal(){document.getElementById('modal').classList.remove('on')}
+function addCart(id){cart.push(id);save();updateBag()}
+function save(){localStorage.setItem('zzep_cart',JSON.stringify(cart));localStorage.setItem('zzep_fav',JSON.stringify(fav))}
+function updateBag(){document.getElementById('bagCount').textContent=cart.length}
+function openCart(){renderCart();document.getElementById('shade').classList.add('on');document.getElementById('cart').classList.add('on')}
+function closeCart(){document.getElementById('shade').classList.remove('on');document.getElementById('cart').classList.remove('on')}
+function renderCart(){let counts={};cart.forEach(id=>counts[id]=(counts[id]||0)+1);let html='',total=0;Object.entries(counts).forEach(([id,q])=>{let p=products.find(x=>x.id==id);total+=p.price*q;html+=`<div class="item"><div class="thumb">${p.color}</div><div><b>${p.name}</b><p>${money(p.price)}</p><div class="qty"><button onclick="changeQty(${id},-1)">−</button>${q}<button onclick="changeQty(${id},1)">+</button></div></div></div>`});document.getElementById('cartItems').innerHTML=html||'<p>장바구니가 비어 있습니다.</p>';document.getElementById('total').textContent=money(total)}
+function changeQty(id,n){if(n>0)cart.push(id);else{let i=cart.indexOf(id);if(i>=0)cart.splice(i,1)}save();renderCart();updateBag()}
+function toggleFav(id){fav.includes(id)?fav=fav.filter(x=>x!==id):fav.push(id);save();render(products.filter(p=>p.cat.includes('BEST')),'best');render(products.filter(p=>p.cat.includes('NEW')),'new')}
+function filterCat(cat){let list=products.filter(p=>p.cat.includes(cat));document.getElementById('new').innerHTML='';document.getElementById('best').innerHTML=list.map(card).join('');window.scrollTo({top:document.getElementById('best').offsetTop-100,behavior:'smooth'})}
+function doSearch(){let q=document.getElementById('search').value.trim().toLowerCase();let list=products.filter(p=>(p.name+p.brand+p.cat.join(' ')).toLowerCase().includes(q));document.getElementById('best').innerHTML=list.map(card).join('');document.getElementById('new').innerHTML='';window.scrollTo({top:document.getElementById('best').offsetTop-100,behavior:'smooth'})}
+function showFavorites(){let list=products.filter(p=>fav.includes(p.id));document.getElementById('best').innerHTML=list.map(card).join('');document.getElementById('new').innerHTML='';window.scrollTo({top:document.getElementById('best').offsetTop-100,behavior:'smooth'})}
+function openAuth(){document.getElementById('modalBody').innerHTML=`<div class="form"><h2>LOGIN</h2><input id="email" placeholder="이메일"><input id="pw" type="password" placeholder="비밀번호"><button class="btn" onclick="login()">LOGIN</button><button onclick="alert('OAuth 연결은 백엔드 설정 후 활성화됩니다.')">Google / Kakao / Apple</button><p class="muted">현재 데모는 브라우저에서 로그인 상태를 테스트합니다.</p></div>`;document.getElementById('modal').classList.add('on')}
+function login(){localStorage.setItem('zzep_user',document.getElementById('email').value||'guest');closeModal();alert('로그인 테스트 완료')}
+function checkout(){if(!cart.length)return alert('장바구니가 비어 있습니다.');let orders=JSON.parse(localStorage.getItem('zzep_orders')||'[]');orders.push({id:'ZZ'+Date.now(),items:[...cart],created:new Date().toISOString(),status:'PAYMENT_TEST'});localStorage.setItem('zzep_orders',JSON.stringify(orders));cart=[];save();updateBag();closeCart();alert('주문 테스트가 생성되었습니다. 실제 결제는 연결하지 않은 데모입니다.')}
+function openAdmin(){let orders=JSON.parse(localStorage.getItem('zzep_orders')||'[]');document.getElementById('modalBody').innerHTML=`<div class="admin"><h2>ZZEP ADMIN</h2><p class="muted">현재 브라우저 데모용 관리자 화면</p><table><tr><th>주문번호</th><th>상품수</th><th>상태</th></tr>${orders.map(o=>`<tr><td>${o.id}</td><td>${o.items.length}</td><td>${o.status}</td></tr>`).join('')}</table></div>`;document.getElementById('modal').classList.add('on')}
+function home(){location.reload()}
+</script>
+</body></html>
